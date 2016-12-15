@@ -31,13 +31,37 @@ class ViewController: UIViewController, UITextFieldDelegate {
             let weatherSearch = URLSession.shared.dataTask(with: request as URLRequest) {
                 data, response, error in
                 
+                var message = ""
+                
                 if error != nil {
-                    self.forecastDisplay.text = "Something has gone wrong, trying typing your location again"
+                    
+                    print(error as Any)
+                
                 } else {
+                    
                     if let unwrappedData = data {
+                        
                         let dataString = NSString(data: unwrappedData, encoding: String.Encoding.utf8.rawValue)
                         
-                        print(dataString as Any)
+                        var stringSeparator = "Weather Forecast Summary:</b><span class=\"read-more-small\"><span class=\"read-more-content\"> <span class=\"phrase\">"
+                        
+                        if let contentArray = dataString?.components(separatedBy: stringSeparator) {
+                            
+                            if contentArray.count > 0 {
+                                
+                                stringSeparator = "</span>"
+                                
+                                let newContentArray = contentArray[1].components(separatedBy: stringSeparator)
+                                    
+                                    if newContentArray.count > 0 {
+                                        
+                                        message = newContentArray[0].replacingOccurrences(of: "&deg;C", with: "°")
+                                        
+                                        print(newContentArray[0])
+                                    }
+                                
+                            }
+                        }
                     }
                 }
             }
@@ -46,39 +70,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
             
         }
 
-        
-        
-        
-//        if let url = URL(string: "http://stackoverflow.com") {
-//            
-//            let request = NSMutableURLRequest(url: url)
-//            
-//            let task = URLSession.shared.dataTask(with: request as URLRequest) {
-//                //3 things we get back - data, responce, error
-//                data, response, error in
-//                
-//                if error != nil {
-//                    print(error as Any)
-//                } else {
-//                    if let unwrappedData = data {
-//                        //UTF8 is standard encoding
-//                        let dataString = NSString(data: unwrappedData, encoding: String.Encoding.utf8.rawValue)
-//                        
-//                        print(dataString as Any)
-//                        
-//                        DispatchQueue.main.sync(execute: {
-//                            
-//                            //Update UI would go here AFTER stuff has loaded
-//                            
-//                        })
-//                        
-//                    }
-//                }
-//                
-//            }
-//            //this is making it RUN or nothing happensd
-//            task.resume()
-//        }
         
         
         
