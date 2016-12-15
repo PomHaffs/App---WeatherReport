@@ -47,13 +47,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
                         
                         if let contentArray = dataString?.components(separatedBy: stringSeparator) {
                             
-                            if contentArray.count > 0 {
+                            if contentArray.count > 1 {
                                 
                                 stringSeparator = "</span>"
                                 
                                 let newContentArray = contentArray[1].components(separatedBy: stringSeparator)
                                     
-                                    if newContentArray.count > 0 {
+                                    if newContentArray.count > 1 {
                                         
                                         message = newContentArray[0].replacingOccurrences(of: "&deg;C", with: "°")
                                         
@@ -64,16 +64,26 @@ class ViewController: UIViewController, UITextFieldDelegate {
                         }
                     }
                 }
+                
+                if message == "" {
+                    message = "Weather cannot be found. Please try again"
+                }
+                
+                DispatchQueue.main.sync(execute: {
+                
+                    self.forecastDisplay.text = message
+                    
+                })
+                
             }
             
             weatherSearch.resume()
             
+        } else {
+            
+            forecastDisplay.text = "Something has gone wrong! Trying re-typing your location"
         }
 
-        
-        
-        
-        
     }
 
     override func viewDidLoad() {
